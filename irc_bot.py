@@ -15,7 +15,7 @@ class IRC():
     def _is_nickname_taken(self) -> bool:
         raise  NotImplementedError
     
-    def authenticate(self, nickname) -> None:
+    def authenticate(self, nickname) -> str:
         """
             following RFC1459 see 4.1.2 & 4.1.3 (4.1.1 being optional)
             actually using username as nickname & vice-versa
@@ -25,26 +25,22 @@ class IRC():
         
         data = f"USER {nickname} 0 * :{nickname} \r\n".encode("utf-8")
         self.socket.send(data)
-        print(self.recv())
-        print(self.recv())
-        print(self.recv())
+        return self.recv()
 
 
 
-    def list_users(self) -> None:
+    def list_users(self) -> str:
         print("LISTING USERS\n")
         data = f"NAMES \r\n".encode("utf-8")
         self.socket.send(data)
-        print(self.recv())
-        
-    def join_channel(self, channel) -> None:
+        return self.recv()
+    
+    def join_channel(self, channel) -> str:
         if not channel.startswith('#'):
             channel = '#'+channel
         data = f"JOIN {channel} \r\n".encode("utf-8")
         self.socket.send(data)
-        print(self.recv())
-        print(self.recv())
-        print(self.recv())
+        return self.recv()
 
     def recv(self) -> str:
         answer = self.socket.recv(10**3)
@@ -59,21 +55,4 @@ class IRC():
         """
         data = f"PRIVMSG {receiver} :{msg} \r\n".encode("utf-8")
         self.socket.send(data)
-        print(self.recv())
-    
-if __name__ == "__main__":
-    server = "irc.root-me.org"
-    port = 6667
-    nickname= f"rals-{str(datetime.now()).split('.')[-1]}"[:9]
-    channel=  "#root-me_challenge"
-
-    print(nickname)
-    print('*'*10)
-    irc = IRC(server, port)
-    print('*'*10)
-    irc.authenticate(nickname)
-    print('*'*10)
-    irc.join_channel(channel)
-    print('*'*10)
-    irc.send_pm("nickname", "are you there ? thats a test btw")
-    print('*'*10)
+        return self.recv()
