@@ -1,2 +1,2 @@
 # IRC-bot
-going through root-me programming challenges :)
+easing my way through root-me programming challenges :)
