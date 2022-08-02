@@ -6,9 +6,6 @@ import select
 
 class IRC():
     def __init__(self, server, port) -> None:
-        """
-            regular socket connection made easy
-        """
         self.socket = s.socket(s.AF_INET, s.SOCK_STREAM)
         self.socket.connect((server, port))
 
@@ -42,6 +39,9 @@ class IRC():
         return self.recv()
 
     def recv(self) -> str:
+        """
+        except: pass for the win
+        """
         full_answer = ""
         self.socket.settimeout(1.1)
         try:
@@ -57,7 +57,7 @@ class IRC():
 
     def send_pm(self, receiver, msg) -> str:
         """
-            4.4.1 Private messages
+            RFC1459 see 4.4.1 Private messages
         """
         print(f"sending private message to {receiver}")
         data = f"PRIVMSG {receiver} :{msg} \r\n".encode("utf-8")
